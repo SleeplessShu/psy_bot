@@ -11,7 +11,7 @@ gptToken = ""
 appToken = ""
 
 def read_token(file_name):
-    with open(f'tokens/{file_name}', 'r') as file:
+    with open(f'tokens/{file_name}.txt', 'r') as file:
         return file.read().strip()
 
 gptToken = read_token('gptToken')
