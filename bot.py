@@ -57,6 +57,8 @@ def update_dialog_history(dialog, role, message):
 def log_message_to_file(user_nickname, role, message):
     message_length = len(message)
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Форматирование даты и времени
+    if not os.path.exists(log_directory):
+        os.makedirs(log_directory)
     log_file_path = os.path.join(log_directory, f"{user_nickname}_fast_dialog.txt")
     with open(log_file_path, "a", encoding="utf-8") as log_file:
         log_file.write(f"\n\n[{timestamp}] {role}: (Текст длинной: {message_length})\n")
