@@ -10,6 +10,12 @@ log_directory = "E:\\codding\\_python\\Insomniac conversations\\logs"
 gptToken = ""
 appToken = ""
 
+def read_token(file_name):
+    with open(f'tokens/{file_name}', 'r') as file:
+        return file.read().strip()
+
+gptToken = read_token('gptToken')
+appToken = read_token('appToken')
 
 # Функция для отправки сообщений с кнопками
 async def send_text_buttons(update, context, text, buttons):
@@ -145,6 +151,9 @@ async def dialogEngage(update, context):
     if dialog.mode == "fast":
         await fast_dialog(update, context)
 
+
+
+
 dialog = Dialog()
 dialog.mode = None
 dialog.list = []
@@ -152,7 +161,7 @@ dialog.count = 0
 dialog.user = {}
 dialog.history = []
 
-chatgpt = ChatGptService(token=gptToken)
+chatgpt = ChatGptService(gptToken)
 
 app = ApplicationBuilder().token(appToken).build()
 
