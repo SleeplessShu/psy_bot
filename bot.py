@@ -62,6 +62,7 @@ def log_message_to_file(user_nickname, role, message):
     if not os.path.exists(log_path):
         os.makedirs(log_path)
     log_file_path = f'{log_path}/{user_nickname}_fast_dialog.txt'
+    log_path.mkdir(parents=True, exist_ok=True)
     with open(log_file_path, "a", encoding="utf-8") as log_file:
         log_file.write(f"\n\n[{timestamp}] {role}: (Текст длинной: {message_length})\n")
 
@@ -77,6 +78,7 @@ async def start(update, context):
     log_file_path = f'{log_path}/{user_nickname}_fast_dialog.txt'
 
     # Создаем или очищаем файл при начале нового диалога
+    log_path.mkdir(parents=True, exist_ok=True)
     with open(log_file_path, "w", encoding="utf-8") as log_file:
         log_file.write("New dialog started\n")
 
