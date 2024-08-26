@@ -4,9 +4,10 @@ import os
 
 from gpt import *
 from util import *
+from datetime import datetime
 
 # Путь к директории для логов
-log_directory = "E:\\codding\\_python\\Insomniac conversations\\logs"
+log_directory = 'logs'
 gptToken = ""
 appToken = ""
 
@@ -54,9 +55,11 @@ def update_dialog_history(dialog, role, message):
 
 # Функция для записи сообщения в лог-файл
 def log_message_to_file(user_nickname, role, message):
+    message_length = len(message)
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Форматирование даты и времени
     log_file_path = os.path.join(log_directory, f"{user_nickname}_fast_dialog.txt")
     with open(log_file_path, "a", encoding="utf-8") as log_file:
-        log_file.write(f"\n\n{role}: {message}\n")
+        log_file.write(f"\n\n[{timestamp}] {role}: (Текст длинной: {message_length})\n")
 
 async def start(update, context):
     chat_id = update.message.chat_id if update.message else update.callback_query.message.chat_id
@@ -68,6 +71,7 @@ async def start(update, context):
     user = update.message.from_user if update.message else update.callback_query.from_user
     user_nickname = user.username if user.username else "unknown_user"
     log_file_path = os.path.join(log_directory, f"{user_nickname}_fast_dialog.txt")
+
     # Создаем или очищаем файл при начале нового диалога
     with open(log_file_path, "w", encoding="utf-8") as log_file:
         log_file.write("New dialog started\n")
@@ -129,7 +133,7 @@ async def fast_dialog(update, context):
 
     user_nickname = update.message.from_user.username if update.message.from_user.username else "unknown_user"
 
-#    log_message_to_file(user_nickname, "user", user_message)
+    log_message_to_file(user_nickname, "user", user_message)
 
 
     my_message = await send_text(update, context, "Твой собеседник думает над ответом...")
@@ -140,8 +144,8 @@ async def fast_dialog(update, context):
 
     prompt = load_prompt("fast")
     answer = await chatgpt.send_question(prompt, full_dialog_text)
+    log_message_to_file(user_nickname, "assistant", answer)
 
-#   log_message_to_file(user_nickname, "assistant", answer)
 
     update_dialog_history(dialog, "assistant", answer)
 
