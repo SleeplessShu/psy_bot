@@ -61,7 +61,7 @@ def log_message_to_file(user_nickname, role, message):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Форматирование даты и времени
     if not os.path.exists(log_path):
         os.makedirs(log_path)
-    log_file_path = os.path.join(log_path, f"{user_nickname}_fast_dialog.txt")
+    log_file_path = f'{log_path}/{user_nickname}_fast_dialog.txt'
     with open(log_file_path, "a", encoding="utf-8") as log_file:
         log_file.write(f"\n\n[{timestamp}] {role}: (Текст длинной: {message_length})\n")
 
@@ -74,7 +74,7 @@ async def start(update, context):
 
     user = update.message.from_user if update.message else update.callback_query.from_user
     user_nickname = user.username if user.username else "unknown_user"
-    log_file_path = os.path.join(log_path, f"{user_nickname}_fast_dialog.txt")
+    log_file_path = f'{log_path}/{user_nickname}_fast_dialog.txt'
 
     # Создаем или очищаем файл при начале нового диалога
     with open(log_file_path, "w", encoding="utf-8") as log_file:
