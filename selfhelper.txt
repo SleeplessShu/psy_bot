@@ -1,0 +1,35 @@
+
+
+//RESTART
+pkill -f bot.py
+python bot.py
+
+//START
+cd psy_bot
+source venv/bin/activate
+pip install -r requirements.txt
+python bot.py
+
+//START with UPDATE
+cd psy_bot
+source venv/bin/activate
+pip install -r requirements.txt
+git pull origin master
+python bot.py
+
+
+
+
+/*
+mkdir my_bot
+git clone https://github.com/username/repo.git
+
+
+cd psy_bot
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+git pull origin master
+python bot.py
+
+*/

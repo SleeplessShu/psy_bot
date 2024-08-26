@@ -2,22 +2,24 @@ from telegram.ext import ApplicationBuilder, MessageHandler, filters, CallbackQu
 import asyncio
 import os
 
+from pathlib import Path
 from gpt import *
 from util import *
 from datetime import datetime
 
 # Путь к директории для логов
-log_directory = 'logs'
-gptToken = ""
-appToken = ""
+THIS_FOLDER = Path(__file__).parent.resolve()
+log_path = THIS_FOLDER / "logs"
+tokenPath = THIS_FOLDER / "tokens"
 
-def read_token(file_name):
-    with open(f'tokens/{file_name}.txt', 'r') as file:
+def read_token(tokenName):
+    with open(f'{tokenPath}/{tokenName}.txt', 'r') as file:
         return file.read().strip()
 
 gptToken = read_token('gptToken')
 appToken = read_token('appToken')
-
+print(f"GPT Token: {gptToken}")
+print(f"App Token: {appToken}")
 # Функция для отправки сообщений с кнопками
 async def send_text_buttons(update, context, text, buttons):
     from telegram import InlineKeyboardButton, InlineKeyboardMarkup
@@ -57,9 +59,9 @@ def update_dialog_history(dialog, role, message):
 def log_message_to_file(user_nickname, role, message):
     message_length = len(message)
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Форматирование даты и времени
-    if not os.path.exists(log_directory):
-        os.makedirs(log_directory)
-    log_file_path = os.path.join(log_directory, f"{user_nickname}_fast_dialog.txt")
+    if not os.path.exists(log_path):
+        os.makedirs(log_path)
+    log_file_path = os.path.join(log_path, f"{user_nickname}_fast_dialog.txt")
     with open(log_file_path, "a", encoding="utf-8") as log_file:
         log_file.write(f"\n\n[{timestamp}] {role}: (Текст длинной: {message_length})\n")
 
@@ -72,7 +74,7 @@ async def start(update, context):
 
     user = update.message.from_user if update.message else update.callback_query.from_user
     user_nickname = user.username if user.username else "unknown_user"
-    log_file_path = os.path.join(log_directory, f"{user_nickname}_fast_dialog.txt")
+    log_file_path = os.path.join(log_path, f"{user_nickname}_fast_dialog.txt")
 
     # Создаем или очищаем файл при начале нового диалога
     with open(log_file_path, "w", encoding="utf-8") as log_file:
@@ -111,7 +113,7 @@ async def fast(update, context):
 
     user = update.message.from_user if update.message else update.callback_query.from_user
     user_nickname = user.username if user.username else "unknown_user"
-    log_file_path = os.path.join(log_directory, f"{user_nickname}_fast_dialog.txt")
+    log_file_path = os.path.join(log_path, f"{user_nickname}_fast_dialog.txt")
     # Создаем или очищаем файл при начале нового диалога
     with open(log_file_path, "w", encoding="utf-8") as log_file:
         log_file.write("Fast dialog started\n")
