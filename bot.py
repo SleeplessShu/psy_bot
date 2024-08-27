@@ -173,7 +173,7 @@ dialog.history = []
 
 chatgpt = ChatGptService(gptToken)
 
-app = ApplicationBuilder().token(appToken).request_timeout(60).build()
+app = ApplicationBuilder().token(appToken).connect_timeout(120).build()
 
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("fast", fast))
